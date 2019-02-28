@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=6
 #SBATCH --mem-per-cpu=2gb
 #SBATCH -p lo
-#SBATCH --array=1-96
+#SBATCH --array=39-42
 
 my_samtools=/home/jmiller1/bin/samtools-1.3/samtools
 my_bwa=/home/jmiller1/bin/bwa-0.7.12/bwa
