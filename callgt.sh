@@ -30,7 +30,7 @@ outfile=$scaf.vcf
 echo $outfile
 
 bam_dir=${refdir}/alignments
-vcf_out=${refdir}/genotypes
+vcf_out=${basedir}/genotypes
 bed_regions=${basedir}/metadata/radsites.bed
 bam_list=${basedir}/metadata/bamlist.txt
 

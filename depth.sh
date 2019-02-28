@@ -16,11 +16,12 @@ $my_bamtools filter -in stdin -mapQuality ">30" -isProperPair true |
 $my_samtools depth -m 50 -d 15000 /dev/stdin |
 gzip -c > ${basedir}/metadata/depth.gz
 
-zcat ${basedir}/metadata/depth.gz | awk '$3>384' |
+## bedtools2
+zcat ${basedir}/metadata/depth.gz | awk '$3>250' |
 awk '{OFS="\t"}{print $1,$2-1,$2,$3}' |
-$BT merge -i stdin -d 10 -c 4 -o mean,max |
+$BT merge -i stdin -d 1 -c 4 -o mean,max |
 awk '{OFS="\t"}{print $1,$2,$3,$4,$5,$3-$2}' |
-awk '$6>$min' | awk '$5<$max' > ${basedir}/metadata/radsites.bed
+awk '$6>50' | awk '$5<15000' > ${basedir}/metadata/radsites.bed
 
 
 ### try all at once
