@@ -1,5 +1,5 @@
 ### set base dir
-basedir=/home/jmiller1/sex_chrom
+basedir=/home/jmiller1/Sex_Map
 
 ## align to ncbi genome
 sbatch -p low -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/align.sh

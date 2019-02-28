@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH -J array_job
-#SBATCH -o /home/jmiller1/Sex_Map/er_out/array_job_out_%A_%a.txt
-#SBATCH -e /home/jmiller1/Sex_Map/er_out/array_job_err_%A_%a.txt
+#SBATCH -o /home/jmiller1/Sex_Map/alignments/er_out/array_job_out_%A_%a.txt
+#SBATCH -e /home/jmiller1/Sex_Map/alignments/er_out/array_job_err_%A_%a.txt
 #SBATCH --cpus-per-task=6
 #SBATCH --mem-per-cpu=2gb
 #SBATCH -p lo
