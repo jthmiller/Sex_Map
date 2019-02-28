@@ -5,6 +5,7 @@ basedir=/home/jmiller1/Sex_Map
 sbatch -p low -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/align.sh
 
 ## calculate depth to find rad sites
-sbatch -t 48:00:00 --mem=60000 depth.sh
+sbatch -t 48:00:00 --mem=64000 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/depth.sh
 
-sbatch  -t 48:00:00 --mem=60000 callgt.sh
+## call genotypes
+sbatch  -t 48:00:00 --mem=64000 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/callgt.sh

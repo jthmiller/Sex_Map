@@ -12,15 +12,16 @@
 
 refdir=/home/jmiller1/bin/code/NCBI_Genome
 bwagenind=${refdir}/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fna
+all_scaf=${refdir}/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.genomefile
 
 my_freebayes=/home/jmiller1/bin/freebayes/bin/freebayes
 my_bedtools=/home/jmiller1/bin/bedtools2/bin/bedtools
 my_bamtools=/home/jmiller1/bin/bamtools-master/bin/bamtools
 
 ##scaf to align
-scaf=$(sed -n "$SLURM_ARRAY_TASK_ID p" ${refdir}/unique.scaf.lg.txt)
+scaf=$(sed -n "$SLURM_ARRAY_TASK_ID p" ${refdir}/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.scaffolds)
 
-endpos=$(expr $(grep -P "$scaf\t" ${refdir}/unsplit_merge.fasta.fai | cut -f 2) - 1)
+endpos=$(expr $(grep -P "$scaf\t" ${refdir}/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fna.fai | cut -f 2) - 1)
 
 region=$scaf:1..$endpos
 echo $region
@@ -28,12 +29,10 @@ echo $region
 outfile=$scaf.vcf
 echo $outfile
 
-bam_dir=/home/jmiller1/QTL_Map_Raw/align
-vcf_out=/home/jmiller1/QTL_Map_Raw/vcf/freebayes.array
-bed_regions=~/QTL_Map_Raw/align/radsites.sorted.bed
-bam_list=/home/jmiller1/QTL_Map_Raw/align/bamlist.txt
-merged_bams=/home/jmiller1/QTL_Map_Raw/align/SOMM0_ALL.bam
-all_scaf=/home/jmiller1/bin/code/ALLMAPS_OUT/unsplit_merge.fasta.genomefile.txt
+bam_dir=${refdir}/alignments
+vcf_out=${refdir}/genotypes
+bed_regions=${basedir}/metadata/radsites.bed
+bam_list=${basedir}/metadata/bamlist.txt
 
 $my_bamtools merge -list $bam_list -region $region| \
 	$my_bamtools filter -in stdin -mapQuality '>30' -isProperPair true | \
