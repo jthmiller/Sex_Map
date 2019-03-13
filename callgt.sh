@@ -26,7 +26,7 @@ endpos=$(expr $(grep -P "$scaf\t" ${refdir}/GCF_000826765.1_Fundulus_heteroclitu
 region=$scaf:1..$endpos
 echo $region
 
-outfile=$scaf.vcf
+outfile=$scaf.vcf.gz
 echo $outfile
 
 bam_dir=${refdir}/alignments
@@ -37,4 +37,5 @@ bam_list=${basedir}/metadata/bamlist.txt
 $my_bamtools merge -list $bam_list -region $region| \
 	$my_bamtools filter -in stdin -mapQuality '>30' -isProperPair true | \
 	$my_bedtools intersect -sorted -a stdin -b $bed_regions -g $all_scaf | \
-	$my_freebayes -f $bwagenind --use-best-n-alleles 4 --pooled-discrete --stdin > $vcf_out/$outfile
+	$my_freebayes -f $bwagenind --use-best-n-alleles 4 --pooled-discrete --stdin |
+bgzip > $vcf_out/$outfile
