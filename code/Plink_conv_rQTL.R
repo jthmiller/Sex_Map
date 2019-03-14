@@ -1,6 +1,6 @@
 #!/bin/R
 library(qtl)
-source("/home/jmiller1/Sex_Map/PLINK2RQTL.f2.R")
+source("/home/jmiller1/Sex_Map/code/PLINK2RQTL.f2.R")
 setwd("/home/jmiller1/Sex_Map")
 dir <- "/home/jmiller1/Sex_Map"
 
