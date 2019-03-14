@@ -81,4 +81,4 @@ $plink \
 	--recode
 
 
-Rscript ${basedir}/code/
+Rscript ${basedir}/code/Plink_conv_rQTL.R
