@@ -114,4 +114,4 @@ cross.test.b <- removeDoubleXO(cross.test.b, verbose = T)
 POS.map.b <- est.map(cross.test.b, error.prob = 0.01, map.function = "kosambi", chr = 1, 
   maxit = 1000)
 cross.test.b <- replace.map(cross.test.b, POS.map.b)
-save.image("/home/jmiller1/Sex_Map/datasetsexmap.rsave")
+save.image("/home/jmiller1/Sex_Map/dataset/sexmap.rsave")
