@@ -1,0 +1,33 @@
+dirso <- "/home/jmiller1/QTL_Map_Raw/popgen/rQTL/data/"
+write.table(cross$pheno[, 1:3], file = file.path(dirso, "sex.txt"))
+pheno.all <- phen <- read.table("/home/jmiller1/QTL_Map_Raw/popgen/rQTL/metadata/ALL_phenotype_Dist.txt",
+
+
+
+
+module load vcftools
+plink=~/bin/plink2
+plinkdir=/home/jmiller1/QTL_Map_Raw/popgen/plinkfiles
+vcfdir=~/QTL_Map_Raw/vcf/freebayes.array
+bfile=~/QTL_Map_Raw/PLINK/outfiles/bfiles
+init_flagset='--make-bed  --allow-extra-chr --autosome-num 24 --allow-no-sex --family'
+pheno=~/QTL_Map_Raw/PLINK/infiles/SOMM.FAM.2.txt
+vcfstat=/home/jmiller1/QTL_Map_Raw/vcftools.cov
+flagset='--set-missing-var-ids @:#  --allow-extra-chr --autosome-num 24 --allow-no-sex --family --chr 1-24'
+hwe='--hwe 0.005 midp include-nonctrl'
+geno='--geno .1'
+maf='--maf 0.1'
+mind='--mind 0.75'
+
+$plink --vcf $vcfdir/SOMM.vcf.gz --out $vcfdir/plinkfiles/SOMM.all --allow-extra-chr
+
+$plink --bfile $plinkdir/SOMM.all --update-ids /home/jmiller1/QTL_Map_Raw/PLINK/infiles/SOMM.txt --allow-extra-chr --out $plinkdir/SOMM.all.2 --make-
+bed
+
+$plink --bfile $plinkdir/SOMM.all.2 --out $plinkdir/SOMM.all.3 $flagset --make-bed --pheno $pheno --all-pheno --keep-cluster-names NBH BRP NEW --make
+-founders --geno
+
+$plink --bfile $plinkdir/SOMM.all.2 --out $plinkdir/SOMM.all.3 $flagset --make-bed --pheno /home/jmiller1/QTL_Map_Raw/vcf/freebayes.array/plinkfiles/
+SOMM.update.pheno --keep-cluster-names NBH BRP NEW --geno .05
+
+$plink --bfile $plinkdir
