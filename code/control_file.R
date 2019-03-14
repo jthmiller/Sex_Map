@@ -2,7 +2,8 @@
 
 ## Directories
 basedir <- "/home/jmiller1/Sex_Map/"
-indir <- "/home/jmiller1/Sex_Map/dataset/"
+indir <- "/home/jmiller1/Sex_Map/dataset"
+plinkdir <- "/home/jmiller1/Sex_Map/plink_files"
 
 ## Funtions for processing rQTL map data
 source(file.path(basedir, "code/source_file.R"))

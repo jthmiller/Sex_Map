@@ -15,9 +15,10 @@ PLINKtoCSVR <- function(ped = "test_complete.ped", map = "test.map", out = "cros
 
   peddata <- scan(ped, what=character(), na.strings=c("-9"))                                                        # Read the PED data, using the much faster scan function
   columnNames <- NULL
-  columnNames <- c(columnNames, "IID")
-  if(!no.fid)     columnNames <- c(columnNames, "FID")
-  if(!no.parents) columnNames <- c(columnNames, "PID", "MID")
+  columnNames <- c(columnNames, "FID")
+  if(!no.fid)     columnNames <- c(columnNames, "IID")
+  if(!no.parents) columnNames <- c(columnNames, "FMID")
+  if(!no.parents) columnNames <- c(columnNames, "MMID")
   if(!no.sex)     columnNames <- c(columnNames, "Sex")
   if(!no.pheno)   columnNames <- c(columnNames, "Pheno")
   peddata <- matrix(peddata, ncol=length(c(columnNames, SNPcolnames)), byrow = TRUE)
@@ -29,6 +30,7 @@ PLINKtoCSVR <- function(ped = "test_complete.ped", map = "test.map", out = "cros
 
   peddata[peddata[,"Sex"] == 1, "Sex"] <- "m"; peddata[peddata[,"Sex"] == 2, "Sex"] <- "f"                          # R/qtl uses m and f, for males and females
   genotypes <- matrix(NA, length(mapdata[,"ID"]), nrow(peddata))                                                    # Empty genotype matrix
+
   rownames(genotypes) <- mapdata[,"ID"]
   column <- length(columnNames)+1
   for(snp in mapdata[,"ID"]){
@@ -56,8 +58,8 @@ PLINKtoCSVR <- function(ped = "test_complete.ped", map = "test.map", out = "cros
     genotypes[snp,] <- genotype
   }
 
-  outCSVR <- rbind(c("Pheno", "", "", peddata[,"Pheno"]),
-                   c("sex", "", "", peddata[,"Sex"]),                                                               # Add the sex phenotype
+  outCSVR <- rbind(c("Pheno", "", "", "",peddata[,"Pheno"]),
+                   c("sex", "", "", "",peddata[,"Sex"]),                                                               # Add the sex phenotype
                    cbind(mapdata[,c("ID","Chr","cM")], genotypes))                                                  # Create CSVRotated output
   write.table(outCSVR, file = out, row.names=FALSE, col.names=FALSE,quote=FALSE, sep=",")                           # Save it to a file
 #  require(qtl)

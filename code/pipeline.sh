@@ -51,6 +51,7 @@ $plink \
 	--update-ids ${basedir}/plink_files/SOMM.txt \
 	--allow-no-sex \
 	--allow-extra-chr \
+	--set-missing-var-ids @:# \
 	--make-bed
 
 ### relate samp id to phenotypes
