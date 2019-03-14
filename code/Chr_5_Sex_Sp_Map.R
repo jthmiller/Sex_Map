@@ -1,20 +1,20 @@
 ### Map QTLs 1 of 3
 source("/home/jmiller1/QTL_Map_Raw/popgen/rQTL/scripts/QTL_remap/MAP/control_file.R")
 ## For plotting
-marker_dens <- list()
+#marker_dens <- list()
 
 # Table of Chroms with sig QTLs
-test.QTLs <- read.table(file.path(basedir, "rQTL/metadata/QTLs.txt"), sep = "\t", 
-  header = T)
+#test.QTLs <- read.table(file.path(basedir, "rQTL/metadata/QTLs.txt"), sep = "\t",
+#  header = T)
 
 ## Get chrom number vector
-test.QTLs$chrm.n <- gsub("chr", "", test.QTLs$chrom)
+#test.QTLs$chrm.n <- gsub("chr", "", test.QTLs$chrom)
 
-print(paste(pop, X, sep = " "))
-############ 
+#print(paste(pop, X, sep = " "))
+############
 
 ## read in the QTL cross
-cross.18 <- read.cross.jm(file = file.path(indpops, paste(pop, ".unphased.f2.csvr", 
+cross.18 <- read.cross.jm(file = file.path(indir, "NBH_CHR5_filt_conv.csvr",
   sep = "")), format = "csvr", geno = c(1:3), estimate.map = FALSE)
 
 ### Pull names from plinkfile

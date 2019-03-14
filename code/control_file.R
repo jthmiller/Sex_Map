@@ -35,65 +35,17 @@ names(trsl.bin) <- as.character(0:5)
 
 ## Parameters for rQTL for population specific datasets (NBH markers require at
 ## least 70% genotypes )
-if (pop == "NBH") {
-  ns <- "North"
-  confirmed = T
-  reorder.marks <- F
-  mapped.only = TRUE
-  grpLod <- 10  ## Standard LG form LOD
-  finLod <- 12  ## Higher final NBH LOD
-  grpRf <- 0.3
-  finRf <- 0.15
-  cutoff <- 1e-05
-  miss <- 12
-  miss1 <- 10
-  miss2 <- 8
-  droppo <- 3
-} else if (pop == "ELR") {
-  ns <- "South"
-  confirmed = T
-  reorder.marks <- F
-  mapped.only = TRUE
-  missing <- 0.9
-  grpLod <- 10  ## Standard LG form LOD
-  finLod <- 12  ## Higher final ELR LOD
-  grpRf <- 0.3
-  finRf <- 0.15
-  cutoff <- 1e-04  ## Higher, need more power to detect seg distortion
-  miss <- 10
-  miss1 <- 10
-  miss2 <- 10
-  droppo <- 15
-} else if (pop == "NEW") {
-  ns <- "North"
-  confirmed = T
-  reorder.marks <- F
-  mapped.only = TRUE
-  inds <- c(NA)  # determined to be dropped low cov
-  missing <- 0.8
-  grpLod <- 10  ## Standard LG form LOD
-  finLod <- 12  ## Higher final ELR LOD
-  grpRf <- 0.3
-  finRf <- 0.15
-  cutoff <- 1e-05
-  miss <- 15
-  miss1 <- 10
-  miss2 <- 8
-  droppo <- 2
-} else if (pop == "BRP") {
-  ns <- "North"
-  confirmed = T
-  reorder.marks <- F
-  mapped.only = TRUE
-  inds <- c(NA)  # determined to be dropped low cov
-  missing <- 0.8
-  grpLod <- 10  ## Standard LG form LOD
-  finLod <- 12  ## Higher final ELR LOD
-  grpRf <- 0.3
-  finRf <- 0.15
-  cutoff <- 1e-05
-  miss <- 15
-  miss1 <- 10
-  miss2 <- 8
-  droppo <- 2
-}
+
+ns <- "North"
+confirmed = T
+reorder.marks <- F
+mapped.only = TRUE
+grpLod <- 10  ## Standard LG form LOD
+finLod <- 12  ## Higher final NBH LOD
+grpRf <- 0.3
+finRf <- 0.15
+cutoff <- 1e-05
+miss <- 12
+miss1 <- 10
+miss2 <- 8
+droppo <- 3
