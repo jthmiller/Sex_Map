@@ -83,3 +83,4 @@ $plink \
 
 
 Rscript ${basedir}/code/Plink_conv_rQTL.R
+Rscript ${basedir}/code/Chr_5_Sex_Sp_Map.R
