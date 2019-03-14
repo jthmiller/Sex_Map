@@ -9,4 +9,4 @@ name <- "NBH_CHR5_filt_conv"
 
 ped <- paste(indir, name, ".ped", sep = "")
 map <- paste(indir, name, ".map", sep = "")
-PLINKtoCSVR(ped = ped, map = map, out = paste(outdir, name, ".parents.csvr", sep = ""))
+PLINKtoCSVR(ped = ped, map = map, out = paste(outdir, name, ".csvr", sep = ""))
