@@ -14,6 +14,8 @@ REMOVE EMPTY VCFs
 
 ## get all chr5 and unmapped contigs
 grep '^chain' ${basedir}/metadata/meiotic_map.chainfile | cut -f3,8 | less -S | sort | uniq > ${basedir}/metadata/Scaf_chrm.txt
+grep 'chr5' ${basedir}/metadata/Scaf_chrm.txt | cut -f1 > ${basedir}/metadata/chrm5_only.txt
+
 grep 'chr5' ${basedir}/metadata/Scaf_chrm.txt | cut -f1 > ${basedir}/metadata/Scaf_chrm5_only.txt
 grep -v 'chr' ${basedir}/metadata/Scaf_chrm.txt | cut -f1 >> ${basedir}/metadata/Scaf_chrm5_only.txt
 find "${basedir}/genotypes" -type f -size +10k -name '*.vcf' |
@@ -84,3 +86,13 @@ $plink \
 
 Rscript ${basedir}/code/Plink_conv_rQTL.R
 Rscript ${basedir}/code/Chr_5_Sex_Sp_Map.R
+
+
+
+### PARENTS #################################################
+## align to ncbi genome
+sbatch -p low -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/align.sh
+## calculate depth to find rad sites
+sbatch -p high -t 48:00:00 --mem=64000 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/depth.sh
+## call genotypes
+sbatch -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/callgt.sh
