@@ -92,7 +92,5 @@ Rscript ${basedir}/code/Chr_5_Sex_Sp_Map.R
 ### PARENTS #################################################
 ## align to ncbi genome
 sbatch -p low -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/align_parents.sh
-## calcula	te depth to find rad sites
-sbatch -p high -t 48:00:00 --mem=64000 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/depth.sh
 ## call genotypes
-sbatch -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/callgt.sh
+sbatch -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/callgt_parents.sh
