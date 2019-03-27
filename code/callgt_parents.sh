@@ -34,8 +34,8 @@ echo $outfile
 bam_dir=${refdir}/alignments
 vcf_out=${basedir}/genotypes/parents
 bed_regions=${basedir}/metadata/radsites.bed
-##bam_list=${basedir}/metadata/bamlist.txt
-bam_list=$(cat <(find $indir -name 'SOMM087_ACAAGCTA.bam') <(find $indir -name 'SOMM087_AACCGAGA.bam'))
+cat <(find $indir -name 'SOMM087_ACAAGCTA.bam') <(find $indir -name 'SOMM087_AACCGAGA.bam') > ${basedir}/metadata/bamlist_parents.txt
+bam_list=${basedir}/metadata/bamlist_parents.txt
 
 $my_bamtools merge -list $bam_list -region $region| \
 $my_bamtools filter -in "${indir}"/SOMM087_ACAAGCTA.bam -mapQuality '>30' -isProperPair true | \
