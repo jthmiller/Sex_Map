@@ -19,7 +19,7 @@ bwagenind=${refdir}/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fna
 outdir=${basedir}/alignments
 
 ### Parents in BRP lib  fastq
-indir=/home/jmiller1/QTL_Map_Raw/demulti_out/BRP/
+indir=/home/jmiller1/QTL_Map_Raw/demulti_out/BP/
 
 ###SOMM087 ACAAGCTA        NBH     NBH1M
 ###SOMM087 AACCGAGA        NBH     NBH1F
