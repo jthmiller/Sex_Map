@@ -4,11 +4,11 @@
 #SBATCH -e /home/jmiller1/QTL_Map_Raw/QTL_scripts/out_er/array_job_err_%A_%a.txt
 #SBATCH --array=1-8577
 #SBATCH -p med
-#SBATCH --mem=30000
+#SBATCH --mem=3000
 #SBATCH -t 48:00:00
 ###### number of nodes
 ###### number of processors
-#SBATCH --cpus-per-task=6
+#SBATCH --cpus-per-task=3
 
 refdir=/home/jmiller1/bin/code/NCBI_Genome
 bwagenind=${refdir}/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fna
