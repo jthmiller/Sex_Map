@@ -23,6 +23,9 @@ indir=/home/jmiller1/QTL_Map_Raw/demulti_out/BP/
 
 ###SOMM087 ACAAGCTA        NBH     NBH1M
 ###SOMM087 AACCGAGA        NBH     NBH1F
+###SOMM088 AATCCGTC        BLI     BI1124M
+###SOMM088 CACCTTAC        NEW     NEW911M
+
 
 p1=$(find $indir -name "*RA*ACAAGCTA*")
 p2=$(find $indir -name "*RA*AACCGAGA*")

@@ -31,7 +31,7 @@ echo $region
 outfile=$scaf.vcf.gz
 echo $outfile
 
-bam_dir=${refdir}/alignments
+###bam_dir=${refdir}/alignments
 vcf_out=${basedir}/genotypes/parents
 bed_regions=${basedir}/metadata/radsites.bed
 cat <(find $indir -name 'SOMM087_ACAAGCTA.bam') <(find $indir -name 'SOMM087_AACCGAGA.bam') > ${basedir}/metadata/bamlist_parents.txt

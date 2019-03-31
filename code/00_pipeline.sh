@@ -7,6 +7,9 @@ sbatch -p low -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/c
 ## calculate depth to find rad sites
 sbatch -p high -t 48:00:00 --mem=64000 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/depth.sh
 
+### Bamlist
+find '/home/jmiller1/Sex_Map/alignments/' -type f -name '*.bam' > ${basedir}/metadata/bamlist.txt
+
 ## call genotypes
 sbatch -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/callgt.sh
 
@@ -94,8 +97,7 @@ basedir=/home/jmiller1/Sex_Map
 sbatch -p low -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/align_parents.sh
 ## call genotypes
 sbatch -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/callgt_parents.sh
-
-
+## get non-empty vcf.gz files
 find "${basedir}/genotypes/parents" -type f -size +1k -name '*.vcf.gz' |
 grep -f ${basedir}/metadata/Scaf_chrm5_only.txt > ${basedir}/metadata/Scaffolds_to_map_parents.txt
 
@@ -104,7 +106,7 @@ while read F
 do
 	dest=$(basename $F)
 	bgzip -@ 6 -f ${F} -c > ${basedir}/chr5_bcfs/parents/"${dest%\.vcf.gz}".bcf
-	bcftools index -f ${basedir}/chr5_bcfs/parents/"${dest%\.vcf.gz}".bcf --threads 6
+	#bcftools index -f ${basedir}/chr5_bcfs/parents/"${dest%\.vcf.gz}".bcf --threads 6
 done < "${basedir}/metadata/Scaffolds_to_map_parents.txt"
 
 find ${basedir}/chr5_bcfs/parents/ -type f -size +10k -name '*1.bcf' > ${basedir}/metadata/filelist_parents.txt
