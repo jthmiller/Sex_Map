@@ -1,6 +1,6 @@
 ### set base dir
 basedir=/home/jmiller1/Sex_Map
-
+module load bcftools
 ## align to ncbi genome
 sbatch -p low -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/align.sh
 
@@ -54,8 +54,7 @@ $plink \
 	--update-ids ${basedir}/plink_files/SOMM.txt \
 	--allow-no-sex \
 	--allow-extra-chr \
-	--set-missing-var-ids @:# \
-	--make-bed
+	--set-missing-var-ids @:# --make-bed
 
 ### relate samp id to phenotypes
 $plink \
@@ -84,8 +83,10 @@ $plink \
 	--nonfounders \
 	--recode
 
-
+### Convert to rQTL format
 Rscript ${basedir}/code/Plink_conv_rQTL.R
+
+### Map the markers
 Rscript ${basedir}/code/Chr_5_Sex_Sp_Map.R
 
 

@@ -5,9 +5,7 @@
 # first written Juli, 2014
 
 ### Convert PLINKs .ped and .map files to the R/qtl .csvr input format ###
-PLINKtoCSVR <- function(ped = "test_complete.ped", map = "test.map", out = "cross.csvr", missing.genotype = "0",
-                        no.fid = FALSE, no.parents = FALSE, no.sex = FALSE, no.pheno = FALSE,
-                        verbose = FALSE){
+PLINKtoCSVR <- function(ped = "test_complete.ped", map = "test.map", out = "cross.csvr", missing.genotype = "0", no.fid = FALSE, no.parents = FALSE, no.sex = FALSE, no.pheno = FALSE, verbose = FALSE){
   mapdata <- read.table(map, colClasses=c("character"))                                                             # Read the MAP data
   colnames(mapdata) <- c("Chr", "ID", "cM", "BP")
 
