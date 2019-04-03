@@ -19,27 +19,30 @@ grep 'chr5' ${basedir}/metadata/Scaf_chrm.txt | cut -f1 > ${basedir}/metadata/ch
 
 grep 'chr5' ${basedir}/metadata/Scaf_chrm.txt | cut -f1 > ${basedir}/metadata/Scaf_chrm5_only.txt
 grep -v 'chr' ${basedir}/metadata/Scaf_chrm.txt | cut -f1 >> ${basedir}/metadata/Scaf_chrm5_only.txt
-find "${basedir}/genotypes" -type f -size +10k -name '*.vcf' |
+find "${basedir}/genotypes" -maxdepth 1 -type f -size +10k -name '*.vcf.gz' |
 grep -f ${basedir}/metadata/Scaf_chrm5_only.txt > ${basedir}/metadata/Scafolds_to_map.txt
 
 ## bgzip non-empty contig vcfs and index
 while read F
 do
 	dest=$(basename $F)
-	bgzip -@ 6 -f ${F} -c > ${basedir}/chr5_bcfs/"${dest%\.vcf}".bcf
-	bcftools index -f ${basedir}/chr5_bcfs/"${dest%\.vcf}".bcf --threads 6
+  bcftools index -f ${basedir}/genotypes/"${dest}"
+	bcftools view ${basedir}/genotypes/"${dest}" -Ob -o ${basedir}/chr5_bcfs/"${dest%\.vcf.gz}".bcf
+	bcftools index -f ${basedir}/chr5_bcfs/"${dest%\.vcf.gz}".bcf
 done < "${basedir}/metadata/Scafolds_to_map.txt"
 
+
 ### Calculate some depth statistics to determine upper coverage cutoff
-find ${basedir}/chr5_bcfs/ -type f -size +10k -name '*1.bcf' > ${basedir}/metadata/filelist.txt
+###find ${basedir}/chr5_bcfs/ -type f -size +10k -name '*1.bcf' > ${basedir}/metadata/filelist.txt
+find ${basedir}/chr5_bcfs/ -type f -name '*1.bcf' > ${basedir}/metadata/filelist.txt
 bcftools concat -D -a --file-list ${basedir}/metadata/filelist.txt -O b -o ${basedir}/chr5_bcfs/NBH_CHR5.bcf
-bcftools sort ${basedir}/chr5_bcfs/NBH_CHR5.bcf -O b -o ${basedir}/chr5_bcfs/NBH_CHR5_sorted.bcf
+bcftools sort -m 20G ${basedir}/chr5_bcfs/NBH_CHR5.bcf -O b -o ${basedir}/chr5_bcfs/NBH_CHR5_sorted.bcf
 bcftools index ${basedir}/chr5_bcfs/NBH_CHR5_sorted.bcf
 bcftools stats --depth 10,5000,10 ${basedir}/chr5_bcfs/NBH_CHR5_sorted.bcf > NBH_CHR5_unfilt.depthstats
 
 ### Filter bcfs and write a vcf for plink, and convert to csv for rQTL
-bcftools view -m2 -M2 -v snps -q 0.1 -Q 0.9 -e 'INFO/AC<10 & FMT/DP<10 & FMT/DP>1000 & INFO/MQM<30 & INFO/NS<10' \
-	${basedir}/chr5_bcfs/NBH_CHR5_sorted.bcf -O v -o ${basedir}/chr5_bcfs/NBH_CHR5_filt.vcf
+bcftools view -m2 -M2 -v snps -q 0.1 -Q 0.9 -e 'INFO/AC<10 & FMT/DP<10 & FMT/DP>1000 & INFO/MQM<40 & INFO/NS<10' \
+ ${basedir}/chr5_bcfs/NBH_CHR5_sorted.bcf -O v -o ${basedir}/chr5_bcfs/NBH_CHR5_filt.vcf
 bcftools stats --depth 1,1000,5 ${basedir}/chr5_bcfs/NBH_CHR5_filt.vcf > NBH_CHR5_filt.depthstats
 
 ### Plink conversion PED and MAP files for rQTL
@@ -49,74 +52,42 @@ pop='NBH'
 
 ### Update barcode id to samp id
 $plink \
-	--vcf ${basedir}/chr5_bcfs/NBH_CHR5_filt.vcf \
-	--out ${basedir}/plink_files/NBH_CHR5_filt \
-	--update-ids ${basedir}/plink_files/SOMM.txt \
-	--allow-no-sex \
-	--allow-extra-chr \
-	--set-missing-var-ids @:# --make-bed
+ --vcf ${basedir}/chr5_bcfs/NBH_CHR5_filt.vcf \
+ --out ${basedir}/plink_files/NBH_CHR5_filt \
+ --update-ids ${basedir}/plink_files/SOMM.txt \
+ --allow-no-sex \
+ --allow-extra-chr \
+ --set-missing-var-ids @:# --make-bed
 
 ### relate samp id to phenotypes
 $plink \
-	--bfile ${basedir}/plink_files/NBH_CHR5_filt \
-	--out ${basedir}/plink_files/NBH_CHR5_pheno \
-	--pheno ${basedir}/plink_files/SOMM.FAM.2.txt \
-	--allow-no-sex \
-	--allow-extra-chr \
-	--all-pheno \
-	--family \
-	--keep-cluster-names ${pop} \
-	--make-bed
+ --bfile ${basedir}/plink_files/NBH_CHR5_filt \
+ --out ${basedir}/plink_files/NBH_CHR5_pheno \
+ --pheno ${basedir}/plink_files/SOMM.FAM.2.txt \
+ --allow-no-sex \
+ --allow-extra-chr \
+ --all-pheno \
+ --family \
+ --keep-cluster-names ${pop} \
+ --make-bed
 
 ### recode to new map and ped for conversion
 $plink \
-	--bfile ${basedir}/plink_files/NBH_CHR5_pheno \
-	--out ${basedir}/plink_files/NBH_CHR5_filt_conv \
-	--pheno ${basedir}/plink_files/SOMM.FAM.2.txt \
-	--allow-no-sex \
-	--allow-extra-chr \
-	--all-pheno \
-	--family \
-	--keep-cluster-names ${pop} \
-	--biallelic-only strict \
-	--snps-only just-acgt \
-	--nonfounders \
-	--recode
+ --bfile ${basedir}/plink_files/NBH_CHR5_pheno \
+ --out ${basedir}/plink_files/NBH_CHR5_filt_conv \
+ --pheno ${basedir}/plink_files/SOMM.FAM.2.txt \
+ --allow-no-sex \
+ --allow-extra-chr \
+ --all-pheno \
+ --family \
+ --keep-cluster-names ${pop} \
+ --biallelic-only strict \
+ --snps-only just-acgt \
+ --nonfounders \
+ --recode
 
 ### Convert to rQTL format
 Rscript ${basedir}/code/Plink_conv_rQTL.R
 
 ### Map the markers
 Rscript ${basedir}/code/Chr_5_Sex_Sp_Map.R
-
-
-
-### PARENTS #################################################
-basedir=/home/jmiller1/Sex_Map
-
-## align to ncbi genome
-sbatch -p low -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/align_parents.sh
-## call genotypes
-sbatch -t 48:00:00 --export=basedir="/home/jmiller1/Sex_Map" ${basedir}/code/callgt_parents.sh
-## get non-empty vcf.gz files
-find "${basedir}/genotypes/parents" -type f -size +1k -name '*.vcf.gz' |
-grep -f ${basedir}/metadata/Scaf_chrm5_only.txt > ${basedir}/metadata/Scaffolds_to_map_parents.txt
-
-## bgzip non-empty contig vcfs and index
-while read F
-do
-	dest=$(basename $F)
-	bgzip -@ 6 -f ${F} -c > ${basedir}/chr5_bcfs/parents/"${dest%\.vcf.gz}".bcf
-	#bcftools index -f ${basedir}/chr5_bcfs/parents/"${dest%\.vcf.gz}".bcf --threads 6
-done < "${basedir}/metadata/Scaffolds_to_map_parents.txt"
-
-find ${basedir}/chr5_bcfs/parents/ -type f -size +10k -name '*1.bcf' > ${basedir}/metadata/filelist_parents.txt
-bcftools concat -D -a --file-list ${basedir}/metadata/filelist_parents.txt -O b -o ${basedir}/chr5_bcfs/NBH_CHR5_FOUNDERS.bcf
-bcftools sort ${basedir}/chr5_bcfs/NBH_CHR5_FOUNDERS.bcf -O b -o ${basedir}/chr5_bcfs/NBH_CHR5_FOUNDERS_sorted.bcf
-bcftools index ${basedir}/chr5_bcfs/NBH_CHR5_FOUNDERS_sorted.bcf
-
-
-
-
-bcftools view -m2 -M2 -v snps -q 0.1 -Q 0.9 -e 'INFO/AC<10 & FMT/DP<10 & FMT/DP>1000 & INFO/MQM<30 & INFO/NS<10' \
-	${basedir}/chr5_bcfs/parents/NBH_CHR5_sorted.bcf -O v -o ${basedir}/chr5_bcfs/NBH_CHR5_filt.vcf

@@ -9,7 +9,5 @@ name <- "NBH_CHR5_filt_conv"
 
 ped <- paste(indir, name, ".ped", sep = "")
 map <- paste(indir, name, ".map", sep = "")
-PLINKtoCSVR(ped = ped, map = map, out = paste(outdir, name, ".csvr", sep = ""))
-missing.genotype = "0",
-                        no.fid = FALSE, no.parents = FALSE, no.sex = FALSE, no.pheno = FALSE,
-                        verbose = FALSE
+PLINKtoCSVR(ped = ped, map = map, out = paste(outdir, name, ".csvr", sep = ""), missing.genotype = "0", 
+  no.fid = FALSE, no.parents = FALSE, no.sex = FALSE, no.pheno = FALSE, verbose = FALSE)
