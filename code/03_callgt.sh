@@ -18,6 +18,7 @@ my_freebayes=/home/jmiller1/bin/freebayes/bin/freebayes
 my_bedtools=/home/jmiller1/bin/bedtools2/bin/bedtools
 my_bamtools=/home/jmiller1/bin/bamtools-master/bin/bamtools
 
+
 ##scaf to align
 scaf=$(sed -n "$SLURM_ARRAY_TASK_ID p" ${refdir}/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.scaffolds)
 
@@ -33,6 +34,7 @@ bam_dir=${refdir}/alignments
 vcf_out=${basedir}/genotypes
 bed_regions=${basedir}/metadata/radsites.bed
 bam_list=${basedir}/metadata/bamlist.txt
+
 
 $my_bamtools merge -list $bam_list -region $region| \
 	$my_bamtools filter -in stdin -mapQuality '>30' -isProperPair true | \

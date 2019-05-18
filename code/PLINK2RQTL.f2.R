@@ -56,9 +56,9 @@ PLINKtoCSVR <- function(ped = "test_complete.ped", map = "test.map", out = "cros
     genotypes[snp,] <- genotype
   }
 
-  outCSVR <- rbind(c("ID", "", "", "",paste(peddata[,"FID"],peddata[,"IID"],sep="_")),
-              c("Pheno", "", "", "",peddata[,"Pheno"]),
-              c("sex", "", "", "",peddata[,"Sex"]),                                                               # Add the sex phenotype
+  outCSVR <- rbind(c("ID", "", "", paste(peddata[,"FID"],peddata[,"IID"],sep="_")),
+              c("Pheno", "", "", peddata[,"Pheno"]),
+              c("sex", "", "", peddata[,"Sex"]),                                                               # Add the sex phenotype
               cbind(mapdata[,c("ID","Chr","cM")], genotypes))
                                                # Create CSVRotated output
 write.table(outCSVR, file = out, row.names=FALSE, col.names=FALSE,quote=FALSE, sep=",")                           # Save it to a file
