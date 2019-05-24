@@ -1,6 +1,9 @@
 ### Map QTLs 1 of 3
 pop <- "NBH"
 source("/home/jmiller1/Sex_Map/code/control_file.R")
+
+## Due to dropout, ~6/92 genotypes are wrong, error rate of 6.5%
+
 ## For plotting marker_dens <- list()
 
 # Table of Chroms with sig QTLs test.QTLs <- read.table(file.path(basedir,
@@ -80,6 +83,17 @@ gt.missing.b <- geno.table(cross.female)
 sum(nmar(cross.male))
 sum(nmar(cross.female))
 
+################################################################################
+################################################################################
+################################################################################
+
+
+
+
+################################################################################
+### CHR 5 ONLY #################################################################
+################################################################################
+
 ### Only CHR5
 chr5 <- read.table("/home/jmiller1/Sex_Map/metadata/chrm5_only.txt", header=F)
 chr5 <- as.character(unlist(chr5$V1))
@@ -89,6 +103,85 @@ mapping <- unique(gsub(":.*",'',markernames(cross.female)))
 chr5.mapped <- chr5[chr5 %in% mapping]
 
 ###cross.18.mapped.scafs <- subset(cross.18,chr)
+################################################################################
+### CHR 5 ONLY #################################################################
+################################################################################
+
+cross.male.RF08.LOD5 <- formLinkageGroups(cross.male, max.rf = 0.1, min.lod = 5,reorgMarkers = TRUE)
+
+save.image('NOAHS')
+
+gt.male.RF08.LOD5 <- geno.table(cross.male.RF08.LOD5)
+
+save.image('NOAHS')
+
+index <- gsub(":.*",'',rownames(gt.male.RF08.LOD5)) %in% chr5
+
+save.image('NOAHS')
+
+
+## 1 has most markers
+## 23 has many AA/AB markers
+
+## 26 is the deleted regions
+## 25 is also the deleted regions
+
+male.deleted <- subset(cross.male.RF08.LOD5, chr = c(25,26))
+
+male.AB <- subset(cross.male.RF08.LOD5, chr = c(1,23))
+
+male.sex.linked <- subset(cross.male.RF08.LOD5, chr = c(1,23,25,26))
+
+
+male.sex.linked <- switchAlleles(male.sex.linked,markernames(male.sex.linked, chr=c(23,25))
+
+male.sex.linked <- formLinkageGroups(male.sex.linked, max.rf = 0.08, min.lod = 5,reorgMarkers = TRUE)
+
+male.sex.linked <- subset(male.sex.linked, chr = keep)
+
+male.sex.linked <- orderMarkers(male.sex.linked, window = 5, use.ripple = T, error.prob = 0.15,
+  map.function = "kosambi", sex.sp = F, maxit = 1000, tol = 0.01)
+
+POS.map.us <- est.map(male.sex.linked, error.prob = 0.15, map.function = "kosambi", chr = 1,maxit = 1000)
+
+male.sex.linked <- replace.map(male.sex.linked, POS.map.us)
+
+
+
+
+
+
+
+gt.male.RF08.LOD5[gt.male.RF08.LOD5$chr==1,  ]
+
+keep <- unique(gt.male.RF08.LOD5[index, 'chr' ])
+
+gt.male.RF08.LOD5 <- subset(gt.male.RF08.LOD5, chr = keep)
+
+gt.male.RF08.LOD5 <- orderMarkers(gt.male.RF08.LOD5, window = 5, use.ripple = T, error.prob = 0.15,
+  map.function = "kosambi", sex.sp = F, maxit = 1000, tol = 0.01)
+
+POS.map.us <- est.map(gt.male.RF08.LOD5, error.prob = 0.15, map.function = "kosambi", chr = 1,maxit = 1000)
+
+gt.male.RF08.LOD5 <- replace.map(gt.male.RF08.LOD5, POS.map.us)
+
+"screen is here
+
+################################################################################
+################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ##parent cross types
 parent.female.5 <- drop.markers(parent.female,markernames(parent.female)[!gsub(":.*",'',markernames(parent.female)) %in% chr5.mapped])
@@ -97,13 +190,11 @@ parent.both.5 <- drop.markers(parent.both,markernames(parent.both)[!gsub(":.*",'
 
 gt.parents.both <- geno.table(parent.both)
 
-
 gt.parents.mal <- geno.table(parent.male.5)
 gt.parents.fem <- geno.table(parent.female.5)
 
 gt.parents.mal.not.het <- rownames(gt.parents.mal)[!gt.parents.mal$AB==1]
 gt.parents.mal.hom <- rownames(gt.parents.mal)[!gt.parents.mal$AB==1]
-
 
 gt.parents.fem.marks <- rownames(gt.parents.fem)[gt.parents.fem$AB==1]
 
@@ -115,6 +206,64 @@ marks.female.mappable <- gt.parents.fem.marks[gt.parents.fem.marks %in% gt.paren
 ## Look for high link in males with the 1:0:1 region
 cross.male.5 <- drop.markers(cross.male,markernames(cross.male)[!gsub(":.*",'',markernames(cross.male)) %in% chr5.mapped])
 cross.female.5 <- drop.markers(cross.female,markernames(cross.female)[!gsub(":.*",'',markernames(cross.female)) %in% chr5.mapped])
+
+switch male GP BB to AA
+mal.BB <- rownames(gt.parents.mal)[gt.parents.mal$BB==1]
+cross.test.male <- switchAlleles(cross.male.5,mal.BB)
+cross.test.male <- formLinkageGroups(cross.test.male, max.rf = 0.1, min.lod = 3,reorgMarkers = TRUE)
+
+cross.test.5.unswitched <- subset(cross.test.male, chr = c(2,3)) ####  AA:2.7  AB:94.5  BB:2.8 (522 markers)
+
+cross.test.5.unswitched <- orderMarkers(cross.test.5.unswitched, window = 5, use.ripple = T, error.prob = 0.15,
+  map.function = "kosambi", sex.sp = F, maxit = 1000, tol = 0.01)
+POS.map.us <- est.map(cross.test.5.unswitched, error.prob = 0.15, map.function = "kosambi", chr = 1,maxit = 1000)
+cross.males.1_0_1 <- replace.map(cross.test.5.unswitched, POS.map.us)
+
+write.cross(cross.males.1_0_1, "/home/jmiller1/Sex_Map/dataset/map.chr5",format="tidy")
+
+
+
+
+
+
+
+
+
+
+
+###### Try to switch phase
+cross.test.male.switch <- switchAlleles(cross.test.male,markernames(cross.test.male,chr=2))
+cross.test.male.switch <- formLinkageGroups(cross.test.male.switch, max.rf = 0.1, min.lod = 6,reorgMarkers = TRUE)
+cross.test.male.switch <- subset(cross.test.male.switch, chr = c(2)) #### AA:48.2  AB:49.2  BB:2.5 (122 markers)
+
+cross.males.1_0_1 <- orderMarkers(cross.test.male.switch, chr = 1, window = 5, use.ripple = T, error.prob = 0.05,
+  map.function = "kosambi", sex.sp = F, maxit = 1000, tol = 0.01)
+
+POS.map <- est.map(cross.test.male.switch, error.prob = 0.01, map.function = "kosambi", chr = 1,maxit = 1000)
+cross.test.male.switch <- replace.map(cross.test.male.switch, POS.map)
+
+##save.image('NOAHS')
+##load('NOAHS')
+
+
+
+
+##### FEMALE
+cross.test.female <- formLinkageGroups(cross.female.5, max.rf = 0.05, min.lod = 3,reorgMarkers = TRUE)
+
+
+male.5.8 <-
+head(geno.table(cross.male.5,chr=1)[,1:5],200)
+
+
+
+##save.image('NOAHS')
+##load('NOAHS')
+
+
+
+
+
 
 ### Low reco rate
 cross.test.male <- formLinkageGroups(cross.male.5, max.rf = 0.05, min.lod = 3,reorgMarkers = TRUE)
@@ -150,10 +299,20 @@ cross.males.1_0_1 <- replace.map(cross.males.1_0_1, POS.map.males.1_0_1)
 
 ### Which markers are in linkage with the odd segregation ratios in males
 mcr1 <- c('NW_012224869.1:3233519','NW_012224869.1:3233364','NW_012224869.1:3233460','NW_012224869.1:2090106','NW_012224869.1:2996642')
+noahs <- c('NW_012224575.1','NW_012224869.1')
+
+## NW_012224575.1:1809000 1816000
+## NW_012224575.1:1880000 1909000
+## NW_012224869.1:227000 232000
+
 gt.male.5[mcr1,]
 gt.female.5[mcr1,]
 gt.parents.mal[mcr1,]
 gt.parents.fem[mcr1,]
+
+mapping <-
+gt.male.5[gsub(":.*",'',rownames(gt.male.5)) %in% noahs,]
+
 
 ##try to map in males
 cross.males.5.map <- formLinkageGroups(cross.male.5, max.rf = 0.1, min.lod = 5,reorgMarkers = TRUE)
@@ -460,3 +619,15 @@ cross.test.a1 <- replace.map(cross.test.a1, POS.map.a)
 
 
 save.image("/home/jmiller1/Sex_Map/dataset/sexmap.mapped_scafs_only.rsave")
+
+
+
+
+
+map <- read.csv('/home/jmiller1/genomes_jm/mapped/scripts/chr5_map.csv')
+
+av.pos <- sapply(unique(map$Scaffold_ID),function(X){mean(map[map$Scaffold_ID==X,4])})
+orient <- sapply(unique(map$Scaffold_ID),function(X){ cor( map[map$Scaffold_ID==X,4] ,map[map$Scaffold_ID==X,2] )})
+dir <- ifelse(orient > 0,"+","-")
+
+cbind(unique(as.character(map$Scaffold_ID))[order(av.pos)],dir)

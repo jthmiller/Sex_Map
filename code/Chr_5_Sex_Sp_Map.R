@@ -79,9 +79,9 @@ gt.missing.a <- geno.table(cross.a)
 gt.missing.b <- geno.table(cross.b)
 
 ## drop down to fixed in pars
-cross.a.fix <- drop.markers(cross.a,markernames(cross.a)[!which(markernames(cross.a)%in% parents.fixed)])
+#cross.a.fix <- drop.markers(cross.a,markernames(cross.a)[!which(markernames(cross.a)%in% parents.fixed)])
 ###head(geno.table(cross.a.fix),100)
-cross.b.fix <- drop.markers(cross.b,markernames(cross.b)[!which(markernames(cross.b)%in% parents.fixed)])
+#cross.b.fix <- drop.markers(cross.b,markernames(cross.b)[!which(markernames(cross.b)%in% parents.fixed)])
 
 print("forming initial linkage groups to fix phase...")
 grpRf <- 0.2
@@ -100,6 +100,13 @@ marks <- c(markernames(cross.test.a.linked),markernames(cross.test.b.linked))
 cross.18 <- drop.markers(cross.18, markernames(cross.18)[!markernames(cross.18)%in% marks])
 
 cross.18 <- formLinkageGroups(cross.18, max.rf = grpRf, min.lod = grpLod, reorgMarkers = TRUE)
+
+
+
+
+
+
+
 
 
 

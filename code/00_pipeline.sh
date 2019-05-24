@@ -91,3 +91,36 @@ Rscript ${basedir}/code/Plink_conv_rQTL.R
 
 ### Map the markers
 Rscript ${basedir}/code/Chr_5_Sex_Sp_Map.R
+
+
+Scaffold_ID,scaffold_position,LG,genetic_position
+head /home/jmiller1/genomes_jm/mapped/scripts/chr5_map.csv
+
+sed 's/:/,/g' /home/jmiller1/genomes_jm/mapped/scripts/chr5_map.csv > /home/jmiller1/genomes_jm/mapped/scripts/chr5_map2.csv
+
+
+module load bio
+module load numpy
+module load matplotlib
+
+python -m jcvi.assembly.allmaps merge \
+/home/jmiller1/genomes_jm/mapped/scripts/chr5_map.csv \
+/home/jmiller1/genomes_jm/mapped/scripts/chr5_map.2.csv \
+-o /home/jmiller1/genomes_jm/mapped/try
+
+head /home/jmiller1/genomes_jm/mapped/MF_Maps/Male.map.csv
+
+python -m jcvi.assembly.allmaps merge \
+/home/jmiller1/genomes_jm/mapped/MF_Maps/Fem.map.csv \
+/home/jmiller1/genomes_jm/mapped/MF_Maps/Male.map.csv \
+-o /home/jmiller1/genomes_jm/mapped/try
+
+
+
+conda create -n chr5.py2 biopython==1.70 numpy deap networkx matplotlib jcvi python=2.7
+
+export PYTHONPATH=/home/jmiller1/genomes_jm/mapped:$PYTHONPATH
+
+python -m jcvi.assembly.allmaps merge \
+/home/jmiller1/bin/code/MF_Maps/Fem.map.csv \
+-o /home/jmiller1/bin/code/ALLMAPS_OUT/unsplit_merge.bed
