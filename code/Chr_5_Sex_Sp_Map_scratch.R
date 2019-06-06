@@ -126,13 +126,16 @@ save.image('NOAHS')
 ## 26 is the deleted regions
 ## 25 is also the deleted regions
 
+#####################################################################
 male.deleted <- subset(cross.male.RF08.LOD5, chr = c(25,26))
 
 male.AB <- subset(cross.male.RF08.LOD5, chr = c(1,23))
 
 male.sex.linked <- subset(cross.male.RF08.LOD5, chr = c(1,23,25,26))
+#####################################################################
 
 
+#####################################################################
 male.sex.linked <- switchAlleles(male.sex.linked,markernames(male.sex.linked, chr=c(23,25))
 
 male.sex.linked <- formLinkageGroups(male.sex.linked, max.rf = 0.08, min.lod = 5,reorgMarkers = TRUE)
@@ -145,6 +148,334 @@ male.sex.linked <- orderMarkers(male.sex.linked, window = 5, use.ripple = T, err
 POS.map.us <- est.map(male.sex.linked, error.prob = 0.15, map.function = "kosambi", chr = 1,maxit = 1000)
 
 male.sex.linked <- replace.map(male.sex.linked, POS.map.us)
+#####################################################################
+
+
+#####################################################################
+male.AB <- switchAlleles(male.AB,markernames(male.AB, chr=23))
+
+male.AB <- formLinkageGroups(male.AB, max.rf = 0.05, min.lod = 5,reorgMarkers = TRUE)
+
+gt.male.AB <- geno.table(male.AB)
+
+index <- gsub(":.*",'',rownames(gt.male.AB)) %in% chr5
+#####################################################################
+
+
+##tail(sort(table(gt.male.AB[index,'chr'])),8)
+##tail(sort(table(gt.male.AB[,'chr'])),8)
+
+###AAxAB
+gt.male.AB[gt.male.AB$chr=='3',]
+gt.male.AB[gt.male.AB$chr=='7',]
+gt.male.AB[gt.male.AB$chr=='34',]
+### Switch AB
+gt.male.AB[gt.male.AB$chr=='2',]
+gt.male.AB[gt.male.AB$chr=='4',]
+gt.male.AB[gt.male.AB$chr=='16',]
+gt.male.AB[gt.male.AB$chr=='37',]
+gt.male.AB[gt.male.AB$chr=='62',]
+
+### All AB
+gt.male.AB[gt.male.AB$chr=='1',]
+
+#male.AB.sw <- switchAlleles(male.AB,markernames(male.AB, chr=c(2,4,16,37,62)))
+##male.AB.sw <- subset(male.AB, chr = c(3,7,2,4,16,34,37,62))
+
+
+gt.male.AB <- geno.table(male.AB)
+chrs.map <- names(table(gt.male.AB[index,'chr'])[table(gt.male.AB[index,'chr']) > 0])
+male.AB.sw <- subset(male.AB, chr = chrs.map[-1]) ### ~ 500 scaffolds
+gt.male.AB.sw  <- geno.table(male.AB.sw)
+gt.male.AB.sw [gt.male.AB.sw$chr=='4',]
+
+
+male.AB.sw.lg <- switchAlleles(male.AB.sw,markernames(male.AB.sw, chr=c(2,4)))
+test <- formLinkageGroups(male.AB.sw.lg , max.rf = 0.1, min.lod = 5,reorgMarkers = TRUE)
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='3',]
+test <- switchAlleles(test,markernames(test, chr=3))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='4',]
+test <- switchAlleles(test,markernames(test, chr=4))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='5',]
+test <- switchAlleles(test,markernames(test, chr=5))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='7',]
+test <- drop.markers(test,markernames(test, chr=7))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='8',]
+test <- switchAlleles(test,markernames(test, chr=8))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='9',]
+test <- switchAlleles(test,markernames(test, chr=9))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='12',]
+test <- switchAlleles(test,markernames(test, chr=12))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='13',]
+test <- switchAlleles(test,markernames(test, chr=13))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='14',]
+test <- switchAlleles(test,markernames(test, chr=14))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='15',]
+test <- drop.markers(test,markernames(test, chr=15))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='16',]
+test <- drop.markers(test,markernames(test, chr=16))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='17',]
+test <- drop.markers(test,markernames(test, chr=17))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='18',]
+test <- drop.markers(test,markernames(test, chr=18))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='19',]
+test <- drop.markers(test,markernames(test, chr=19))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='21',]
+test <- switchAlleles(test,markernames(test, chr=21))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='22',]
+test <- drop.markers(test,markernames(test, chr=22))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='23',]
+test <- drop.markers(test,markernames(test, chr=23))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='25',]
+test <- switchAlleles(test,markernames(test, chr=25))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='26',]
+test <- switchAlleles(test,markernames(test, chr=26))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='27',]
+test <- drop.markers(test,markernames(test, chr=27))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='28',]
+test <- drop.markers(test,markernames(test, chr=28))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='29',]
+test <- drop.markers(test,markernames(test, chr=29))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='30',]
+test <- switchAlleles(test,markernames(test, chr=30))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='31',]
+test <- switchAlleles(test,markernames(test, chr=31))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='32',]
+test <- drop.markers(test,markernames(test, chr=32))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='32',]
+test <- switchAlleles(test,markernames(test, chr=33))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='34',]
+test <- drop.markers(test,markernames(test, chr=34))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='35',]
+test <- drop.markers(test,markernames(test, chr=35))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='36',]
+test <- switchAlleles(test,markernames(test, chr=36))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='37',]
+test <- switchAlleles(test,markernames(test, chr=37))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='37',]
+test <- drop.markers(test,markernames(test, chr=38))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='39',]
+test <- drop.markers(test,markernames(test, chr=39))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='40',]
+test <- switchAlleles(test,markernames(test, chr=40))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='42',]
+test <- drop.markers(test,markernames(test, chr=42))
+gt.test <- geno.table(test)
+gt.test[gt.test$chr=='43',]
+
+#sapply(as.character(c(75:84)),function(x){
+# print(x)
+#print(gt.test[gt.test$chr==x,])
+#})
+
+
+test <- drop.markers(test,markernames(test, chr=c(43,45,46,47,48,49,50,52,53,54,55,56,58,59,60,62,64,65,66,67,68,69,70,71,72,73,75,76,77,78,79,80,82)))
+test <- switchAlleles(test,markernames(test, chr=c(57,61,63,74,81)))
+gt.test <- geno.table(test)
+
+test2 <- subset(test, chr = names(table(gt.test$chr)[table(gt.test$chr) > 1]))
+test2.relaxed <- formLinkageGroups(test2 , max.rf = 0.3, min.lod = 3,reorgMarkers = TRUE)
+
+save.image('NOAHS')
+
+gt.test2 <- geno.table(test2.relaxed)
+gt.test2[gt.test2$chr=='1',]
+
+test2.relaxed <- orderMarkers(test2.relaxed, window = 5, use.ripple = T, error.prob = 0.2,
+  map.function = "kosambi", sex.sp = F, maxit = 1000, tol = 0.01)
+
+POS.map.us <- est.map(test2.relaxed, error.prob = 0.2, map.function = "kosambi", chr = 1,maxit = 1000)
+
+test2.relaxed <- replace.map(test2.relaxed, POS.map.us)
+
+save.image('NOAHS')
+
+write.cross(test2.relaxed, "/home/jmiller1/Sex_Map/dataset/test2.relaxed",format="tidy")
+
+
+##write.table(cbind(sort(table(gsub(':.*','',rownames(gt.test2))))), 'test2.relaxed')
+
+
+
+#test2.hi <- formLinkageGroups(test2 , max.rf = 0.1, min.lod = 5,reorgMarkers = TRUE)
+#test.relaxed <- formLinkageGroups(test , max.rf = 0.3, min.lod = 3,reorgMarkers = TRUE)
+
+
+male.AB.bk <- subset(male.AB, chr = c(3,7,2,4,16,34,37,62))
+male.allhets <- subset(male.AB, chr = 1)
+
+
+
+
+male.AB.sw.lg <- formLinkageGroups(male.AB.sw , max.rf = 0.3, min.lod = 3,reorgMarkers = TRUE)
+
+"
+gt.male.sw.lg <- geno.table(male.AB.sw.lg)
+
+male.AB.sw.lg <- switchAlleles(male.AB.sw.lg,markernames(male.AB.sw.lg, chr=1))
+
+male.AB.sw.lg <- formLinkageGroups(male.AB.sw.lg, max.rf = 0.3, min.lod = 3,reorgMarkers = TRUE)
+
+male.AB.sw.lg <- orderMarkers(male.AB.sw.lg, window = 5, use.ripple = T, error.prob = 0.2,
+  map.function = "kosambi", sex.sp = F, maxit = 1000, tol = 0.01)
+
+POS.map.us <- est.map(male.AB.sw.lg, error.prob = 0.15, map.function = "kosambi", chr = 1,maxit = 1000)
+
+male.AB.sw.lg <- replace.map(male.AB.sw.lg, POS.map.us)
+
+save.image('NOAHS')
+
+
+
+write.cross(male.AB.sw.lg, "/home/jmiller1/Sex_Map/dataset/map.chr5.more.scaffs",format="tidy")
+
+write.csv(gt.missing.a,"/home/jmiller1/Sex_Map/dataset/male.gtable")
+
+####### Simple map
+
+yourdir <- "/home/jmiller1/Sex_Map/dataset/"
+
+map <- read.csv(file.path(yourdir,'map.chr5.more.scaffs_map.csv'),stringsAsFactors=F)
+
+gts <- read.csv(file.path(yourdir,'male.gtable'),stringsAsFactors=F,row.names=1)
+
+## Scaffold_ID scaffold_position LG genetic_position
+
+Scaffold_ID <- gsub(':.*','',map$X)
+
+scaffold_position <- as.numeric(gsub('.*:','',map$X))
+
+map <- data.frame(Scaffold_ID,scaffold_position,chr=5,pos=as.numeric(map$pos))
+
+av.pos <- sapply(unique(map$Scaffold_ID),
+            function(X){mean(map[map$Scaffold_ID==X,4])})
+
+orient <- sapply(unique(map$Scaffold_ID),
+            function(X){ cor( map[map$Scaffold_ID==X,4] ,map[map$Scaffold_ID==X,2])})
+
+dir <- ifelse(orient > 0,"+","-")
+
+simp.map <- data.frame(Scaffold_ID=unique(map$Scaffold_ID),av.pos=as.numeric(av.pos),orient=as.numeric(orient),dir,row.names=unique(map$Scaffold_ID))
+
+simp.map <- simp.map[order(simp.map$av.pos),]
+
+
+### Total scaffs in MALE
+
+male <- table(gts$chr)
+male.mapped <- table(map$Scaffold_ID)
+m <- names(male.mapped)
+
+evid <- data.frame(all.loci=as.numeric(male[m]), num.mapped=as.numeric(male.mapped[m]),row.names=m)
+evid$proportion_scaff_linked <- as.numeric(evid$num.mapped/evid$all.loci)
+
+simp.map$proportion_scaff_linked <- evid[rownames(simp.map),3]
+
+write.csv(simp.map,file.path(yourdir,'simp.map'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+map <- read.csv('/home/jmiller1/genomes_jm/mapped/scripts/chr5_map.csv')
+
+
+
+'screen here
+
+screen -dr  7971.pts-97.farm
+
+male.AB <- subset(male.AB, chr =    )
+
+male.sex.linked <- orderMarkers(male.sex.linked, window = 5, use.ripple = T, error.prob = 0.15,
+  map.function = "kosambi", sex.sp = F, maxit = 1000, tol = 0.01)
+
+POS.map.us <- est.map(male.sex.linked, error.prob = 0.15, map.function = "kosambi", chr = 1,maxit = 1000)
+
+male.sex.linked <- replace.map(male.sex.linked, POS.map.us)
+
+
+
+
+
+
+
+
+
+
 
 
 
